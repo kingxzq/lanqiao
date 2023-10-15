@@ -1,0 +1,14 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	
+	string result="onmlkjihgfedcba";
+	for(int n=4;n>=0;--n)
+	{
+		if(result[n]>result[n+1])
+			swap(result[n],result[n+1]);
+	}
+    cout << result << endl;
+	return 0;
+}
