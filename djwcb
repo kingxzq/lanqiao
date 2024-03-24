@@ -1,0 +1,34 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int _pow(int a, int n, int p) {
+    int res = 1;
+    a %= p;
+    while (n > 0) {
+        if (n % 2 == 1) {
+            res = (res * a) % p;
+        }
+        a = (a * a) % p;
+        n /= 2;
+    }
+    return res;
+}
+
+int main() {
+    int t;
+    cin >> t;
+    
+    int x;
+    string p;
+    while (t--) {
+        cin >> x >> p;
+        int ans = 1;
+
+        for (int i = 0; i < p.size(); i++) {
+            ans = (_pow(ans, 10, 10) * _pow(x, p[i] - '0', 10)) % 10;
+        }
+        cout << ans << endl;
+    }
+
+    return 0;
+}
