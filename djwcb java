@@ -1,0 +1,32 @@
+import java.util.Scanner;
+// 1:无需package
+// 2: 类名必须Main, 不可修改
+
+public class Main {
+    public static int pow(int x,int p){
+        int ret=1;
+        for(int i=0;i<p;i++){
+            ret=(ret*x)%10;
+        }
+
+        return ret;
+    }
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        //在此输入您的代码...
+        int T=scan.nextInt();
+        while(T-->0){
+            int x=scan.nextInt();
+            String p=scan.next();
+
+            int ret=1;
+            for(int i=p.length()-1;i>=0;i--){
+                int n=p.charAt(i)-'0';
+                ret=(ret*pow(x,n))%10; //  x的每个字符串位上的幂值  乘积 取 模10   34 5
+                x=pow(x,10)%10; // x的10次方 ..100次方  ..的个位数
+            }
+            System.out.println(ret);
+        }
+        scan.close();
+    }
+}
