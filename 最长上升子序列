@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+int n,k,a[1003],dp[1003][23],ans=0;
+string flag;
+int main()
+{
+  cin>>n>>k;
+  for(int i=1;i<=n;i++) cin>>a[i];
+  cin>>flag;
+  //dp思想
+  for(int i=1;i<=n;i++)
+    for(int j=0;j<i;j++)
+      if(a[j]<a[i])//符合上升
+      {
+        for(int in_s=0;in_s<=k;in_s++){
+          if(dp[j][in_s]==0&&(j!=0||in_s!=0)) continue;
+       //以a[j]结尾的LIS不存在有in_s个数在集合S中的情况
+          if(flag[i-1]=='1') 
+//a[i]在集合S中，以a[j]为结尾的LIS有in_s个数在集合S中-->以a[i]为结尾的LIS有in_s+1个数在集合S中    in_s+1>k?k:in_s+1 当LIS中有超过k个数在集合S中也看作有k个数处理
+            dp[i][in_s+1>k?k:in_s+1]=max(dp[i][in_s+1>k?k:in_s+1],dp[j][in_s]+1);
+          else dp[i][in_s]=max(dp[i][in_s],dp[j][in_s]+1);//正常LIS
+        }
+        ans=max(ans,dp[i][k]);
+      }
+      if(ans==0) cout<<"-1";
+      else cout<<ans;
+  return 0;
+}
