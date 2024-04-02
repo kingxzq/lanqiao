@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+const int N = 1e5 + 10;
+vector<int> e[N];
+int n,m;
+int wei[N],wi[N],ins[N],out[N];
+int cnt;
+
+void dfs(int x,int fa){
+  ins[x]=++cnt;
+  wi[ins[x]]=wei[x];
+  for(const auto t : e[x]){
+    if(t==fa) continue;
+    dfs(t,x);
+  }
+  out[x]=cnt;
+}
+
+signed main(){
+  cin>>n>>m;
+  for(int i=1;i<=n;i++) cin>>wei[i];
+  for(int i=1;i<n;i++){
+    int u,v;
+    cin>>u>>v;
+    e[u].push_back(v);
+    e[v].push_back(u);
+  }
+  dfs(1,0);
+  while(m--){
+    int op;
+    cin>>op;
+    if(op==1){
+      int x,y;
+      cin>>x>>y;
+      wi[ins[x]]=y; 
+    }else{
+      int x;
+      cin>>x;
+      int ans=0;
+      for(int i=ins[x];i<=out[x];i++){
+        ans^=wi[i];
+      }
+      cout<<ans<<'\n';
+    }
+  }
+  return 0;
+}
