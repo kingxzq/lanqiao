@@ -1,0 +1,499 @@
+//1
+#include <iostream>
+using namespace std;
+
+int main() {
+    int array[100] = {
+        5, 6, 8, 6, 9, 1, 6, 1, 2, 4, 9, 1, 9, 8, 2, 3, 6, 4, 7, 7,
+        5, 9, 5, 0, 3, 8, 7, 5, 8, 1, 5, 8, 6, 1, 8, 3, 0, 3, 7, 9,
+        2, 7, 0, 5, 8, 8, 5, 7, 0, 9, 9, 1, 9, 4, 4, 6, 8, 6, 3, 3,
+        8, 5, 1, 6, 3, 4, 6, 7, 0, 7, 8, 2, 7, 6, 8, 9, 5, 6, 5, 6,
+        1, 4, 0, 1, 0, 0, 9, 4, 8, 0, 9, 1, 2, 8, 5, 0, 2, 5, 3, 3
+    };
+
+    int daysInMonth[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int ans = 0;
+
+    for (int month = 1; month <= 12; ++month) {
+        for (int day = 1; day <= daysInMonth[month]; ++day) {
+            int dateSeq[8] = { 2, 0, 2, 3, month / 10, month % 10, day / 10, day % 10 };
+            int k = 0;
+
+            for (int i = 0; i < 100; ++i) {
+                if (array[i] == dateSeq[k]) {
+                    ++k;
+                    if (k == 8) {
+                        ans++;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    printf("%d\n", ans);
+    return 0;
+}
+
+
+//2
+#include<stdio.h>
+#include<math.h>
+int main() {
+    double n = 23333333, sum = 0;
+    int o = 0, l = 0;
+    for (o = 0; o <= n; o++) {
+        sum = 0;
+        sum -= o * (o / n) * log2(o / n) + (n - o) * ((n - o) / n) * log2((n - o) / n);
+        if (sum > 11625907.5 && sum < 11625907.6) {
+            printf("%d", o);
+            break;
+        }
+    }
+    return 0;
+}
+
+//3
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    int v_min = 1, v_max = 1e9;
+    while (n--)
+    {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        v_min = max(v_min, a / (b + 1) + 1);
+        v_max = min(v_max, a / b);
+    }
+
+    printf("%d %d\n", v_min, v_max);
+    return 0;
+}
+
+//4
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 10;
+
+int n;
+struct Plane
+{
+    int t, d, l;
+}p[N];
+bool st[N];
+
+bool dfs(int u, int last)
+{
+    if (u == n) return true;
+
+    for (int i = 0; i < n; i++)
+    {
+        int t = p[i].t, d = p[i].d, l = p[i].l;
+        if (!st[i] && t + d >= last)
+        {
+            st[i] = true;
+            if (dfs(u + 1, max(last, t) + l)) return true;
+            st[i] = false;
+        }
+    }
+
+    return false;
+}
+
+int main()
+{
+    int T;
+    scanf("%d", &T);
+    while (T--)
+    {
+        scanf("%d", &n);
+        for (int i = 0; i < n; i++)
+        {
+            int t, d, l;
+            scanf("%d%d%d", &t, &d, &l);
+            p[i] = { t, d, l };
+        }
+
+        memset(st, 0, sizeof st);
+        if (dfs(0, 0)) puts("YES");
+        else puts("NO");
+    }
+
+    return 0;
+}
+
+
+//5
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 100010;
+
+int n;
+int g[10];
+
+int main()
+{
+    scanf("%d", &n);
+
+    int res = 0;
+    char num[20];
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%s", num);
+        int l = num[0] - '0', r = num[strlen(num) - 1] - '0';
+        int f = max(1, g[l] + 1);
+        g[r] = max(g[r], f);
+        res = max(res, f);
+    }
+
+    printf("%d\n", n - res);
+    return 0;
+}
+
+//6
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 60;
+int g[N][N], n, m, res = 0;
+bool st[N][N];
+int dx[] = { 0, 0, 1, -1 },
+dy[] = { 1, -1, 0, 0 };
+
+void dfs_1(int r, int c)
+{
+    st[r][c] = true;
+    //四向连通
+    for (int i = 0; i < 4; i++)
+    {
+        int x = dx[i] + r, y = dy[i] + c;
+        if (st[x][y] || g[x][y] == 0) continue;
+        dfs_1(x, y);
+    }
+}
+
+void dfs_0(int r, int c)
+{
+    st[r][c] = true;
+    //八向连通
+    for (int i = -1; i <= 1; i++)
+        for (int j = -1; j <= 1; j++)
+        {
+            int x = r + i, y = c + j;
+            if (x < 0 || x > n + 1 || y < 0 || y > m + 1 || st[x][y]) continue;
+            if (g[x][y] == 0) dfs_0(x, y);
+            else dfs_1(x, y), res++;
+        }
+}
+
+int main()
+{
+    int T; cin >> T;
+    while (T--)
+    {
+        memset(g, 0, sizeof g);
+        memset(st, false, sizeof st);
+        cin >> n >> m; res = 0;
+        for (int i = 1; i <= n; i++)
+            for (int j = 1; j <= m; j++)
+            {
+                char c; cin >> c;
+                g[i][j] = c - '0';
+            }
+        dfs_0(0, 0);//从一个外海方格开始dfs
+        cout << res << endl;
+    }
+    return 0;
+}
+
+//7
+#include<iostream>
+#include <vector>
+
+using namespace std;
+
+int k;
+char st, ed;
+string p;
+
+void solve()
+{
+    cin >> k;
+    cin >> p >> st >> ed;
+    vector<int> ps, pe;
+    for (int i = 0; i < p.size(); i++)
+    {
+        if (p[i] == st) ps.push_back(i);
+        if (p[i] == ed) pe.push_back(i);
+    }
+
+    long long ans = 0;
+    for (int i = 0; i < ps.size(); i++)
+    {
+        int x = ps[i];
+        int X = x + k - 1;
+        int l = 0, r = pe.size() - 1;
+        while (l < r)
+        {
+            int mid = l + r >> 1;
+            if (pe[mid] >= X) r = mid;
+            else l = mid + 1;
+        }
+        if (pe[l] >= X) ans += pe.size() - l;
+    }
+    cout << ans << endl;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    solve();
+    return 0;
+}
+
+//8
+#pragma GCC target ("avx")
+#pragma GCC optimize (2, 3, "Ofast", "inline", "-ffast-math")
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+__attribute__((unused)) int io_ = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr), cout.tie(nullptr);
+    return 0;
+    }();
+    const int N = 5e5 + 10;
+    ll v[N], l[N], r[N];
+
+    void del(int x) {
+        r[l[x]] = r[x], l[r[x]] = l[x];
+        v[l[x]] += v[x], v[r[x]] += v[x];
+    }
+
+    int main() {
+        int n, k; cin >> n >> k;
+        r[0] = 1, l[n + 1] = n;
+        priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>> h;
+        for (int i = 1; i <= n; i++)
+            cin >> v[i], l[i] = i - 1, r[i] = i + 1, h.push({ v[i], i });
+        while (k--) {
+            auto p = h.top(); h.pop();
+            if (p.first != v[p.second]) h.push({ v[p.second], p.second }), k++;
+            else del(p.second);
+        }
+        int head = r[0];
+        while (head != n + 1) {
+            cout << v[head] << " ";
+            head = r[head];
+        }
+        return 0;
+    }
+
+    //9
+#include <iostream>
+#include<cstring>
+#include<algorithm>
+    using namespace std;
+
+    typedef long long LL;
+
+    const int N = 1e5 + 10, M = N * 2, K = 20;
+
+    int h[N], e[M], w[M], ne[M], idx;
+    int depth[N], f[N][K];
+    LL d[N];
+    int q[N];
+    int n, k;
+
+    void add(int a, int b, int c)
+    {
+        e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+    }
+
+    void dfs(int u, int fa)
+    {
+        depth[u] = depth[fa] + 1;
+        f[u][0] = fa;
+        for (int i = 1; i <= 19; i++)
+            f[u][i] = f[f[u][i - 1]][i - 1];
+
+        for (int i = h[u]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (j == fa) continue;
+            d[j] = d[u] + w[i];
+            dfs(j, u);
+        }
+    }
+
+    int lca(int a, int b)
+    {
+        if (depth[a] < depth[b]) swap(a, b);
+        for (int i = 19; ~i; i--)
+            if (depth[f[a][i]] >= depth[b])
+                a = f[a][i];
+        if (a == b) return a;
+        for (int i = 19; ~i; i--)
+            if (f[a][i] != f[b][i])
+            {
+                a = f[a][i];
+                b = f[b][i];
+            }
+        return f[a][0];
+    }
+
+    LL get(int a, int b)
+    {
+        int p = lca(a, b);
+        return d[a] + d[b] - 2 * d[p];
+    }
+
+    int main()
+    {
+        memset(h, -1, sizeof h);
+        scanf("%d%d", &n, &k);
+        for (int i = 1; i < n; i++)
+        {
+            int a, b, c;
+            scanf("%d%d%d", &a, &b, &c);
+            add(a, b, c), add(b, a, c);
+        }
+        dfs(1, 0);
+        for (int i = 0; i < k; i++) scanf("%d", &q[i]);
+        LL sum = 0;
+        for (int i = 0; i + 1 < k; i++) sum += get(q[i], q[i + 1]);
+        for (int i = 0; i < k; i++)
+        {
+            LL res = sum;
+            // 跳过i(i不是端点),等同于砍掉i-1->i和i->i+1,加上i-1->i+1
+            if (i && i != k - 1) res += get(q[i - 1], q[i + 1]) - get(q[i - 1], q[i]) - get(q[i], q[i + 1]);
+            // 跳过i(i是左端点),等同于砍掉i->i+1
+            else if (!i) res -= get(q[i], q[i + 1]);
+            // 跳过i(i是右端点),等同于砍掉i-1->i
+            else res -= get(q[i - 1], q[i]);
+            printf("%lld ", res);
+        }
+        puts("");
+
+        return 0;
+    }
+
+    //10
+#include<bits/stdc++.h>
+    using namespace std;
+    typedef long long LL;
+    typedef unsigned long long uLL;
+    typedef pair<int, int> PII;
+#define pb(s) push_back(s);
+#define SZ(s) ((int)s.size());
+#define ms(s,x) memset(s, x, sizeof(s))
+#define all(s) s.begin(),s.end()
+    const int inf = 0x3f3f3f3f;
+    const int mod = 1000000007;
+    const int N = 200010;
+
+    int n, m;
+    std::vector<int> e[N];
+    int depth[N], fa[N][32];
+    int f[N];
+    int root;
+    int ans;
+    map<PII, int> mp;
+    void bfs(int root)
+    {
+        ms(depth, 0x3f);
+        depth[0] = 0, depth[root] = 1;
+        queue<int> q;
+        q.push(root);
+        while (!q.empty()) {
+            auto t = q.front();
+            q.pop();
+            for (int j : e[t]) {
+                if (depth[j] > depth[t] + 1) {
+                    depth[j] = depth[t] + 1;
+                    q.push(j);
+                    fa[j][0] = t;
+                    for (int k = 1; k <= 15; k++) {
+                        fa[j][k] = fa[fa[j][k - 1]][k - 1];
+                    }
+                }
+            }
+        }
+    }
+    int lca(int a, int b) {
+        if (depth[a] < depth[b]) swap(a, b);
+        for (int k = 15; k >= 0; k--) {
+            if (depth[fa[a][k]] >= depth[b]) {
+                a = fa[a][k];
+            }
+        }
+        if (a == b) return a;
+        for (int k = 15; k >= 0; --k) {
+            if (fa[a][k] != fa[b][k]) {
+                a = fa[a][k];
+                b = fa[b][k];
+            }
+        }
+        return fa[a][0];
+    }
+    int dfs(int u, int fa) {
+        int res = f[u];
+        for (auto v : e[u]) {
+            if (v == fa) continue;
+            int g = dfs(v, u);
+            if (g == m) {
+                ans = max(ans, mp[{v, u}]);
+            }
+            res += g;
+        }
+        return res;
+    }
+    void solve()
+    {
+        cin >> n >> m;
+        for (int i = 0; i < n - 1; ++i) {
+            int u, v;
+            cin >> u >> v;
+            mp[{u, v}] = mp[{v, u}] = i + 1;
+            e[u].push_back(v);
+            e[v].push_back(u);
+        }
+        bfs(1);
+        for (int i = 0; i < m; ++i) {
+            int u, v;
+            cin >> u >> v;
+            int z = lca(u, v);
+            f[u]++;
+            f[v]++;
+            f[z] -= 2;
+        }
+        dfs(1, -1);
+        cout << (ans == 0 ? -1 : ans) << '\n';
+    }
+    int main()
+    {
+        ios_base::sync_with_stdio(false);
+        cin.tie(0); cout.tie(0);
+        int t = 1;
+        while (t--)
+        {
+            solve();
+        }
+        return 0;
+    }
