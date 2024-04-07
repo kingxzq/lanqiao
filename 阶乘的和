@@ -1,0 +1,44 @@
+//本题需要找到合并阶乘的规律
+//如果题目中没有A[i]阶乘加和的条件,那么m就是数组A中的最小值
+//而如果要对A[i]的阶乘加和,可能出现两个较小的数的阶乘合并成一个较大数的阶乘的现象
+//如3个2的阶乘可以合并成3的阶乘,4个3的阶乘可以合并成4的阶乘
+//故得到规律:若数字num出现了cnt次,且num可以被(cnt+1)整除,那么就可以合并成(num+1)的阶乘
+//如样例中的2 2 2,可以将其合并成一个3,转化为数字3出现了一次 
+//用map容器存储<数字,出现的次数>,再逐个数字验证是否满足如上规律,
+//若满足则合并,并更新其出现的次数,若有不满足的数字则直接输出即可 
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+
+const int N=1e5+10;
+
+map<ll,int>mp;
+
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    for(int i=1;i<=n;i++)
+    {
+        ll tmp;scanf("%lld",&tmp);
+        mp[tmp]++;//用map记录每个数字出现的次数 
+    }    
+    map<ll,int>::iterator it;
+    for(it=mp.begin();it!=mp.end();it++)//自动按照元素从小到大的顺序遍历 
+    {
+        ll num=it->first;//取出当前元素 
+        int cnt=it->second;//取出当前元素出现的次数 
+        if(cnt%(num+1)==0)//满足阶乘合并的条件 
+        {
+            mp[num+1]+=cnt/(num+1);//例如3个2的阶乘合并成1个3的阶乘,3的出现次数加1 
+        }
+        else
+        {
+            printf("%lld\n",num);//否则到此为止,不能再合并阶乘,当前(最小)元素就是要找的m 
+            return 0;
+        }
+    }
+    return 0;
+}
