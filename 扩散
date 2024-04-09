@@ -1,0 +1,45 @@
+#include <iostream>
+#include <queue>
+#include <set>
+using namespace std;
+
+int main() {
+    set<pair<int, int>> black;  // 记录黑色格子的坐标
+    queue<pair<int, int>> bfs; 
+    const int x[] = { 1, -1, 0, 0 };
+    const int y[] = { 0, 0, 1, -1 };
+
+    // 初始化黑色格子
+    black.insert({ 0, 0 });
+    black.insert({ 2020, 11 });
+    black.insert({ 11, 14 });
+    black.insert({ 2000, 2000 });
+
+    // 将初始黑色格子加入队列
+    for (auto p : black) {
+        bfs.push(p);
+    }
+
+    // 模拟扩散过程
+    for (int t = 0; t < 2020; t++) {
+        int size = bfs.size();
+        for (int i = 0; i < size; i++) {
+            pair<int, int> cur = bfs.front();
+            bfs.pop();
+
+            // 扩散到上、下、左、右四个相邻格子
+            for (int j = 0; j < 4; j++) {
+                int X = cur.first + x[j];
+                int Y = cur.second + y[j];
+                if (!black.count({ X, Y })) {
+                    black.insert({ X, Y });
+                    bfs.push({ X, Y });
+                }
+            }
+        }
+    }
+
+    cout << black.size() << endl;
+
+    return 0;
+}
