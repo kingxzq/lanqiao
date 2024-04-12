@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+int main(int argc, char** argv) {
+	int n;
+	cin>>n;
+	int pass=0,excel=0;
+	for(int i=0;i<n;i++){
+		int tmp;
+		cin>>tmp;
+		if(tmp>=60){
+			pass++;
+			if(tmp>=85) excel++;
+		} 
+	}
+	
+	int passret=pass*100/n;
+	double s=pass*100/(double)n-passret;
+	if(s>=0.5) passret++;
+	int excelret=excel*100/n;
+    s=excel*100/(double)n-excelret;
+	if(s>=0.5) excelret++;
+	
+	printf("%d\%\n%d\%\n",passret,excelret);
+	return 0;
+}
