@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int getday[13]={0,31,28,31,30,31,30,31,31,30,31,30,31};
+bool cheakday(int year,int month,int day){
+	int flag=0;
+	if(year%400==0||(year%100!=0&&year%4==0)) flag=1;
+	if(month<=0||month>12) return false;
+	if(flag&&month==2&&day>=1&&day<=29) return true;
+	if(day>0&&day<=getday[month]) return true; 
+  return false;
+}
+int main(int argc, char** argv) {
+	int s1,s2;
+	cin>>s1>>s2;
+	int count=0;
+	for(int i=s1;i<=s2;i++){
+		int year=i/10000;
+		int month=i%10000/100;
+		int day=i%100;
+		if(cheakday(year,month,day)){
+			string t1(to_string(i));
+			string t2(t1);
+			reverse(t1.begin(),t1.end());
+			if(t1==t2) count++;
+		}
+	}
+	cout<<count<<endl;
+	return 0;
+}
